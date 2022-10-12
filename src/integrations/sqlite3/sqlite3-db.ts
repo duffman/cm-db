@@ -1,5 +1,5 @@
 /**
- * SQLite3 Wrapper Class
+ * ZynapticDb - SQLite3 Wrapper Class
  *
  * @author Patrik Forsberg <patrik.forsberg@coldmind.com>
  * @date 2021-08-08
@@ -13,11 +13,7 @@ import { Database }     from "sqlite3";
 import { SqliteDbType } from './sqlite3-db.type';
 import { sqlite3 }      from "sqlite3";
 
-export function zynLog(...data: any[]) {
-	function al() {
-
-	}
-}
+export function zynLog(...data: any[]) {}
 
 export class Sqlite3Db {
 	public sqliteDb: sqlite3;
@@ -75,20 +71,26 @@ export class Sqlite3Db {
 	public modify(query: string, values?: any[]): Promise<number> {
 		return new Promise((resolve, reject) => {
 			if (values.length) {
-				this.db.run(query, values, runCallback.bind(this));
+				this.db.run(query, values, function(err: any) {
+					if (err) {
+						reject(err);
+					}
+					else {
+						zynLog("Sqlite3Db :: modify :: LAST ID ::", this.lastID);
+						resolve(this.lastID);
+					}
+				});
 			}
 			else {
-				this.db.run(query, runCallback.bind(this));
-			}
-
-			function runCallback(err: any) {
-				if (err) {
-					reject(err);
-				}
-				else {
-					zynLog("Sqlite3Db :: modify :: LAST ID ::", this.lastID);
-					resolve(this.lastID);
-				}
+				this.db.run(query, function(err: any) {
+					if (err) {
+						reject(err);
+					}
+					else {
+						zynLog("Sqlite3Db :: modify :: LAST ID ::", this.lastID);
+						resolve(this.lastID);
+					}
+				});
 			}
 		});
 	}

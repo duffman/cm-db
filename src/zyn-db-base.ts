@@ -68,10 +68,10 @@ export class ZynDbBase implements ISqlite3DbHandler {
 
 			if (this.db) {
 				connectResult = await this.db.connect();
-				if (!connectResult) throw new Error("");
+				if (!connectResult) throw new Error(`Unable to connect database "${ this.dbFilename }"`);
 			}
 			else {
-				throw new Error(`Unable to connect database "${ this.dbFilename }"`);
+				throw new Error(`Internal Error: Database Object not assigned`);
 			}
 
 			if (isSelect) {
