@@ -1,0 +1,27 @@
+{
+  "name": "zynaptic-db",
+  "version": "1.0.0",
+  "description": "Database wrapper for Relational Databases, currently integrating SQLite",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duffman/zynaptic-db.git"
+  },
+  "author": "Coldmind AB - Patrik Forsberg <patrik.forsberg@coldmind.com>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/duffman/zynaptic-db/issues"
+  },
+  "homepage": "https://github.com/duffman/zynaptic-db#readme",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "sqlite",
+    "sqlite3",
+    "wrapper"
+  ]
+}

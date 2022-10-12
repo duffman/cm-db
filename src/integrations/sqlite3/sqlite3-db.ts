@@ -1,21 +1,29 @@
 /**
- * skynode-taxi
+ * SQLite3 Wrapper Class
+ *
  * @author Patrik Forsberg <patrik.forsberg@coldmind.com>
  * @date 2021-08-08
  *
- * Copyright (c) 2021 Netix AB - All Rights Reserved
+ * Copyright (c) 2021 Coldmind AB - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential.
  */
 
 import { Database }     from "sqlite3";
-import { ZynLogger }    from "../../zynaptic-session/src/common/zyn-logger";
 import { SqliteDbType } from './sqlite3-db.type';
 import { sqlite3 }      from "sqlite3";
-import { spatialite } from "spa"
+
+const zynLogger = console.log;
+
+export function zynLog(...data: any[]) {
+	function al() {
+
+	}
+}
+
 export class Sqlite3Db {
 	public sqliteDb: sqlite3;
-	public db: Database;
+	public db: Database | any;
 
 
 	constructor(private type: SqliteDbType, public filename: string) {
@@ -35,19 +43,18 @@ export class Sqlite3Db {
 	 * @returns {Promise<boolean>}
 	 */
 	public connect(): Promise<boolean> {
-		console.log(`Connecting to database ::`, this.filename);
+		zynLog(`Connecting to database ::`, this.filename);
 
 		return new Promise((resolve, reject) => {
 			this.db = new this.sqliteDb.Database(this.filename, (err: any) => {
 				if (err) {
-					console.error(err.message);
-					console.log(`Connection to database "${ this.filename }" failed.`);
+					zynLog("error", err.message);
+					zynLog(`Connection to database "${ this.filename }" failed.`);
 
 					reject(err);
 				}
 				else {
-					console.log(`Connected to "${ this.filename }" SQlite database.`);
-
+					zynLog(`Connected to "${ this.filename }" SQlite database.`);
 					resolve(true);
 				}
 			});
@@ -84,7 +91,7 @@ export class Sqlite3Db {
 					reject(err);
 				}
 				else {
-					ZynLogger.logVerbose("Sqlite3Db :: modify :: LAST ID ::", this.lastID);
+					zynLog("Sqlite3Db :: modify :: LAST ID ::", this.lastID);
 					resolve(this.lastID);
 				}
 			}
@@ -105,7 +112,7 @@ export class Sqlite3Db {
 					reject(err);
 				}
 				else {
-					ZynLogger.logVerbose("Sqlite3Db :: dbGet ::", row);
+					zynLog("Sqlite3Db :: dbGet ::", row);
 					resolve(row);
 				}
 			}
@@ -129,9 +136,9 @@ export class Sqlite3Db {
 		});
 	}
 
-	public get(query: string): Promise<any> {
+	public get(query: string, values?: unknown[]): Promise<any> {
 		if (this.type === SqliteDbType.Sqlite) {
-			return this.dbGet(query);
+			return this.dbGet(query, values);
 		}
 		else if (this.type === SqliteDbType.Spatialite) {
 			return this.spatialGet(query);

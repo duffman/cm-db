@@ -12,41 +12,19 @@
  *
  */
 
-import { ZynLogger }         from "../zynaptic-session/src/common/zyn-logger";
-import { Sqlite3Db }         from "./sqlite3/sqlite3-db";
-import { ISqlite3DbHandler } from "./sqlite3/sqlite3-db-handler";
-import { SqliteDbType }      from "./sqlite3/sqlite3-db.type";
+import { zynLog }            from "./integrations/sqlite3/sqlite3-db";
+import { Sqlite3Db }         from "./integrations/sqlite3/sqlite3-db";
+import { ISqlite3DbHandler } from "./integrations/sqlite3/sqlite3-db-handler";
+import { SqliteDbType }      from "./integrations/sqlite3/sqlite3-db.type";
 import { existsSync }        from "fs";
-import { basename } from "path";
+import { basename }          from "path";
 
 export class ZynDbBase implements ISqlite3DbHandler {
 	protected db: Sqlite3Db;
 	protected dbFilename: string;
 	protected dbFullFilename: string;
 
-	constructor() {
-	}
-
-	public async openDatabase(dbFilename: string, dbType?: SqliteDbType, dbPath?: string): Promise<boolean> {
-		return null;
-	}
-
-	public async open(dbFilename: string, tryQuery?: boolean) {
-		ZynLogger.info(">> openDatabase ::", dbFilename);
-
-		try {
-			if (existsSync(dbFilename)) {
-				if (await this.initDatabase(dbFilename) && tryQuery) {
-					const queryTestRes = await this.execute("SELECT 666 + 1");
-					ZynLogger.logVerbose("QUERY TEST ::", queryTestRes);
-
-				}
-			}
-		}
-		catch (e) {
-			ZynLogger.fatal(`Unable to open database "${ this.db }"`);
-		}
-	}
+	constructor() {}
 
 	/**
 	 * Locate database file and initialze
@@ -55,7 +33,7 @@ export class ZynDbBase implements ISqlite3DbHandler {
 	 * @param {string} dbPath
 	 * @returns {Promise<boolean>}
 	 */
-	protected async initDatabase(
+	public async initDatabase(
 		dbFilename: string,
 		dbType         = SqliteDbType.Sqlite,
 	): Promise<boolean> {
@@ -73,7 +51,7 @@ export class ZynDbBase implements ISqlite3DbHandler {
 			result = await this.db.connect();
 		}
 		catch (e) {
-			ZynLogger.fatal("ZynDbBase :: initDatabase", e);
+			zynLog("fatal", "ZynDbBase :: initDatabase", e);
 			result = false;
 		}
 
@@ -97,14 +75,14 @@ export class ZynDbBase implements ISqlite3DbHandler {
 			}
 
 			if (isSelect) {
-				result = await this.db.select(query, values);
+				result = await this.db.get(query, values);
 			}
 			else {
 				result = await this.db.modify(query, values);
 			}
 		}
 		catch (e) {
-			ZynLogger.error("ZynDbBase ::", e);
+			zynLog("error", "ZynDbBase ::", e);
 		}
 
 		return result;

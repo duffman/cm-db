@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import { ZynLogger }         from "../../zynaptic-session/src/common/zyn-logger";
+import { ZynLogger }         from "../../../../zynaptic-session/src/common/zyn-logger";
 import { Sqlite3Db }         from './sqlite3-db';
 import { ISqlite3DbHandler } from './sqlite3-db-handler';
 import { SqliteDbType }      from './sqlite3-db.type';
