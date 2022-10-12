@@ -1,6 +1,7 @@
 lib
 /lib
 
+*.lock
 # Logs
 logs
 *.log

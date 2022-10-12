@@ -13,8 +13,6 @@ import { Database }     from "sqlite3";
 import { SqliteDbType } from './sqlite3-db.type';
 import { sqlite3 }      from "sqlite3";
 
-const zynLogger = console.log;
-
 export function zynLog(...data: any[]) {
 	function al() {
 
@@ -76,14 +74,11 @@ export class Sqlite3Db {
 
 	public modify(query: string, values?: any[]): Promise<number> {
 		return new Promise((resolve, reject) => {
-			console.log("MOD 1 ::");
 			if (values.length) {
-				console.log("MOD 1 :: A ::", values);
-				this.db.run(query, values, runCallback);
+				this.db.run(query, values, runCallback.bind(this));
 			}
 			else {
-				console.log("MOD 1 :: B");
-				this.db.run(query, runCallback);
+				this.db.run(query, runCallback.bind(this));
 			}
 
 			function runCallback(err: any) {

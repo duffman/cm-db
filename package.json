@@ -1,6 +1,6 @@
 {
   "name": "zynaptic-db",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Database wrapper for Relational Databases, currently integrating SQLite",
   "main": "index.js",
   "repository": {
@@ -16,12 +16,18 @@
   "directories": {
     "lib": "lib"
   },
-  "scripts": {
+  "scripts": { d
     "test": "test"
   },
   "keywords": [
     "sqlite",
     "sqlite3",
     "wrapper"
-  ]
+  ],
+  "dependencies": {
+    "sqlite3": "^5.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.4"
+  }
 }

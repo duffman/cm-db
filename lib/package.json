@@ -1,6 +1,6 @@
 {
   "name": "zynaptic-db",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Database wrapper for Relational Databases, currently integrating SQLite",
   "main": "index.js",
   "repository": {
