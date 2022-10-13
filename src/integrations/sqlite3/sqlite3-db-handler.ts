@@ -12,5 +12,9 @@
 import { SqliteDbType } from './sqlite3-db.type';
 
 export interface ISqlite3DbHandler {
-  initDatabase(dbFilename: string, dbType: SqliteDbType, dbPath: string): Promise<boolean>;
+  initDatabase(
+      dbFilename: string,
+      dbType: SqliteDbType,
+      createIfNotExist?: boolean
+  ): Promise<boolean>;
 }

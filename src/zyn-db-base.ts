@@ -20,7 +20,7 @@ import { existsSync }        from "fs";
 import { basename }          from "path";
 
 export class ZynDbBase implements ISqlite3DbHandler {
-	protected db: Sqlite3Db;
+	protected sqlite: Sqlite3Db;
 	protected dbFilename: string;
 	protected dbFullFilename: string;
 
@@ -36,6 +36,7 @@ export class ZynDbBase implements ISqlite3DbHandler {
 	public async initDatabase(
 		dbFilename: string,
 		dbType         = SqliteDbType.Sqlite,
+		createIfNotExist?: boolean
 	): Promise<boolean> {
 		let result = false;
 
@@ -44,11 +45,30 @@ export class ZynDbBase implements ISqlite3DbHandler {
 			this.dbFullFilename = dbFilename;
 
 			if (!existsSync(dbFilename)) {
+				if (createIfNotExist) {
+					const userDB = new this.sqlite.db(
+						dbFilename,
+						this.sqlite.openReadWrite | this.sqlite.openCreate,
+						(err) => {
+							if (!err) {
+								this.execute(
+									"CREATE TABLE \"web_sessions\" (\n"
+									+ "\t\"id\"\tINTEGER,\n"
+									+ "\t\"created\"\tINTEGER,\n"
+									+ "\t\"ttl\"\tINTEGER,\n"
+									+ "\t\"data\"\tTEXT,\n"
+									+ "\t\"last_access\"\tINTEGER,\n"
+									+ "\tPRIMARY KEY(\"id\" AUTOINCREMENT)\n"
+									+ ");"
+								);
+							}
+						});
+				} else
 				throw new Error(`initDatabase :: database "${ dbFilename}" does not exist.`);
 			}
 
-			this.db = new Sqlite3Db(dbType, this.dbFullFilename);
-			result = await this.db.connect();
+			this.sqlite = new Sqlite3Db(dbType, this.dbFullFilename);
+			result      = await this.sqlite.connect();
 		}
 		catch (e) {
 			zynLog("fatal", "ZynDbBase :: initDatabase", e);
@@ -66,8 +86,8 @@ export class ZynDbBase implements ISqlite3DbHandler {
 		try {
 			let connectResult: boolean = false;
 
-			if (this.db) {
-				connectResult = await this.db.connect();
+			if (this.sqlite) {
+				connectResult = await this.sqlite.connect();
 				if (!connectResult) throw new Error(`Unable to connect database "${ this.dbFilename }"`);
 			}
 			else {
@@ -75,10 +95,11 @@ export class ZynDbBase implements ISqlite3DbHandler {
 			}
 
 			if (isSelect) {
-				result = await this.db.get(query, values);
+				console.log("isSelect ------------->");
+				result = await this.sqlite.get(query, values);
 			}
 			else {
-				result = await this.db.modify(query, values);
+				result = await this.sqlite.modify(query, values);
 			}
 		}
 		catch (e) {

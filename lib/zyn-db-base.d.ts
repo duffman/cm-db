@@ -15,7 +15,7 @@ import { Sqlite3Db } from "./integrations/sqlite3/sqlite3-db";
 import { ISqlite3DbHandler } from "./integrations/sqlite3/sqlite3-db-handler";
 import { SqliteDbType } from "./integrations/sqlite3/sqlite3-db.type";
 export declare class ZynDbBase implements ISqlite3DbHandler {
-    protected db: Sqlite3Db;
+    protected sqlite: Sqlite3Db;
     protected dbFilename: string;
     protected dbFullFilename: string;
     constructor();
@@ -26,7 +26,7 @@ export declare class ZynDbBase implements ISqlite3DbHandler {
      * @param {string} dbPath
      * @returns {Promise<boolean>}
      */
-    initDatabase(dbFilename: string, dbType?: SqliteDbType): Promise<boolean>;
+    initDatabase(dbFilename: string, dbType?: SqliteDbType, createIfNotExist?: boolean): Promise<boolean>;
     execute(query: string, ...values: unknown[]): Promise<any>;
 }
 //# sourceMappingURL=zyn-db-base.d.ts.map

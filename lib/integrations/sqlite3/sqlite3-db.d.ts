@@ -1,5 +1,5 @@
 /**
- * SQLite3 Wrapper Class
+ * ZynapticDb - SQLite3 Wrapper Class
  *
  * @author Patrik Forsberg <patrik.forsberg@coldmind.com>
  * @date 2021-08-08
@@ -15,6 +15,8 @@ export declare function zynLog(...data: any[]): void;
 export declare class Sqlite3Db {
     private type;
     filename: string;
+    openCreate: number;
+    openReadWrite: number;
     sqliteDb: sqlite3;
     db: Database | any;
     constructor(type: SqliteDbType, filename: string);

@@ -1,9 +1,10 @@
 /**
- * Taxi Stockholm - Provider
- * @author Patrik Forsberg <patrik.forsberg@coldmind.com>
- * @date 2021-09-20
+ * ZynapticDb - Database Type
  *
- * Copyright (c) 2021 Netix AB - All Rights Reserved
+ * @author Patrik Forsberg <patrik.forsberg@coldmind.com>
+ * @date 2021-08-08
+ *
+ * Copyright (c) 2021 Coldmind AB - All Rights Reserved
  * Unauthorized copying of this file, via any medium is strictly prohibited
  * Proprietary and confidential.
  */

@@ -11,11 +11,16 @@
 
 import { Database }     from "sqlite3";
 import { SqliteDbType } from './sqlite3-db.type';
-import { sqlite3 }      from "sqlite3";
+import { sqlite3, OPEN_CREATE, OPEN_READWRITE}      from "sqlite3";
 
-export function zynLog(...data: any[]) {}
+export function zynLog(...data: any[]) {
+	console.log(":: zLog ::", data);
+}
 
 export class Sqlite3Db {
+	public openCreate = OPEN_CREATE;
+	public openReadWrite = OPEN_READWRITE;
+
 	public sqliteDb: sqlite3;
 	public db: Database | any;
 
@@ -98,21 +103,30 @@ export class Sqlite3Db {
 	public dbGet(query: string, values?: unknown[]): Promise<any> {
 		return new Promise((resolve, reject) => {
 			if (values) {
-				this.db.all(query, values, getCallback);
+				this.db.all(query, values,  function (err: any, row: any) {
+					if (err) {
+						console.error(err.message);
+						reject(err);
+					}
+					else {
+						zynLog("Sqlite3Db :: dbGet ::", row);
+						resolve(row);
+					}
+				});
+
 			} else {
-				this.db.all(query, getCallback);
+				this.db.all(query, function (err: any, row: any) {
+					if (err) {
+						console.error(err.message);
+						reject(err);
+					}
+					else {
+						zynLog("Sqlite3Db :: dbGet ::", row);
+						resolve(row);
+					}
+				});
 			}
 
-			function getCallback (err: any, row: any) {
-				if (err) {
-					console.error(err.message);
-					reject(err);
-				}
-				else {
-					zynLog("Sqlite3Db :: dbGet ::", row);
-					resolve(row);
-				}
-			}
 		});
 	}
 
@@ -135,9 +149,11 @@ export class Sqlite3Db {
 
 	public get(query: string, values?: unknown[]): Promise<any> {
 		if (this.type === SqliteDbType.Sqlite) {
+			console.log("IS LITE");
 			return this.dbGet(query, values);
 		}
 		else if (this.type === SqliteDbType.Spatialite) {
+			console.log("IS GEO");
 			return this.spatialGet(query);
 		}
 	}
